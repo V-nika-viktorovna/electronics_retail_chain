@@ -59,8 +59,8 @@ class NetworkLink(models.Model):
 
     products = models.ManyToManyField(Product, **NULFLAG)
 
-    supplier = models.ForeignKey('NetworkLink', on_delete=models.SET_NULL,
-                                 verbose_name="Поставщик", help_text="Поставщик", **NULFLAG)
+    supplier = models.ForeignKey('NetworkLink', on_delete=models.SET_NULL, verbose_name="Поставщик",
+                                 help_text="Поставщик", **NULFLAG)
 
     debt_to_supplier = models.DecimalField(max_digits=10, decimal_places=2, default=0,
                                            verbose_name="Долг перед поставщиком",
@@ -70,6 +70,11 @@ class NetworkLink(models.Model):
 
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, **NULFLAG,
                                    verbose_name='Создавший пользователь', help_text='Создавший пользователь')
+
+    # def save(self, *args, **kwargs):
+    #     if not self.supplier:  # если поставщик не указан
+    #         self.supplier = self  # устанавливаем ссылку на себя
+    #     super(NetworkLink, self).save(*args, **kwargs)
 
     class Meta:
         ordering = ["city"]

@@ -1,4 +1,5 @@
 from rest_framework import serializers
+
 from .models import NetworkLink, Product
 
 
@@ -48,20 +49,26 @@ class NetworkLinkDetailSerializer(serializers.ModelSerializer):
     def get_count_products(self, obj):
         """Метод для получения количества продуктов поставщика."""
 
-        #return Lesson.objects.filter(name=course).count()
-
         return obj.products.count()
 
     def get_url_supplier(self, obj):
         """Метод для получения ссылки на поставщика."""
+
         supplier = obj.supplier
-        url_supplier = f"http://127.0.0.1:8000/electronics_retail_chain/networklink/{supplier.pk}/"
+        if supplier:
+            url_supplier = f"http://127.0.0.1:8000/electronics_retail_chain/networklink/{supplier.pk}/"
+        else:
+            url_supplier = f"http://127.0.0.1:8000/electronics_retail_chain/networklink/{obj.pk}/"
         return url_supplier
 
     def get_hierarchy(self, obj):
+        supplier = obj.supplier
         if "Завод" in obj.level:
             hierarchy = 0
-        elif obj.pk == obj.supplier.pk:
+        elif supplier:
+            if obj.pk == obj.supplier.pk:
+                hierarchy = 0
+        elif supplier is None:
             hierarchy = 0
         else:
             hierarchy = 1

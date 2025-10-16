@@ -1,4 +1,4 @@
 [flake8]
 max-line-length = 119
-exclude = .git, __pycache__, settings.py, 0001_initial.py, .venv
+exclude = .git, __pycache__, settings.py, 0001_initial.py, 0002_initial.py, 0003_networklink_products_alter_networklink_house_number.py, .venv
 per-file-ignores = __init__.py:F401

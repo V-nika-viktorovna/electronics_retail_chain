@@ -1,24 +1,32 @@
-from rest_framework.permissions import IsAdminUser
 from rest_framework.viewsets import ModelViewSet
 
 from electronics_retail_chain.models import NetworkLink, Product
+from electronics_retail_chain.pagination import \
+    ElectronicsRetailChainPagination
 from electronics_retail_chain.serializers import (NetworkLinkDetailSerializer,
-                                 NetworkLinkSerializer, ProductSerializer)
-from users.permissions import IsModer, IsActive
+                                                  NetworkLinkSerializer,
+                                                  ProductSerializer)
+from users.permissions import IsActive, IsModer
 
 
 class ProductViewSet(ModelViewSet):
     """Класс настройки CRUD для модели Product."""
 
     serializer_class = ProductSerializer
-    # Получаем все данне из БД
     queryset = Product.objects.all()
+    pagination_class = ElectronicsRetailChainPagination
 
     def perform_create(self, serializer):
         """Метод вызывается при создании нового объекта.
         Присваувает значение пол. created_by равным текущему авторизованному пользователю."""
 
         serializer.save(created_by=self.request.user)
+
+    # def get(self, request):
+    #     queryset = Product.objects.all()
+    #     paginated_queryset = self.paginate_queryset(queryset)
+    #     serializer = ProductSerializer(paginated_queryset, many=True)
+    #     return self.get_paginated_response(serializer.data)
 
     def get_permissions(self):
         """Проверка прав доступа в зависимости от роли пользователя."""
@@ -37,14 +45,11 @@ class NetworkLinkViewSet(ModelViewSet):
     serializer_class = NetworkLinkSerializer
     queryset = NetworkLink.objects.all()
     filterset_fields = ("country",)
+    pagination_class = ElectronicsRetailChainPagination
 
     def perform_create(self, serializer):
         """Метод вызывается при создании нового объекта.
         Присваувает значение пол. created_by равным текущему авторизованному пользователю."""
-        #
-        # networklink = serializer.save()
-        # networklink.created_by = self.request.user
-        # networklink.save()
 
         serializer.save(created_by=self.request.user)
 
